@@ -9,8 +9,8 @@ import (
 
 var DB *sql.DB
 
-func ConnectDB() (*sql.DB, error) {
-	connStr := "host=localhost port=5432 user=admin password=senha1234 dbname=notification-api sslmode=disable"
+func ConnectDB(HOST, PORT, USER, PASSWORD, DBNAME, SSLMODE string) (*sql.DB, error) {
+	connStr := "host=" + HOST + " port=" + PORT + " user=" + USER + " password=" + PASSWORD + " dbname=" + DBNAME + " sslmode=" + SSLMODE
 	var err error
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
