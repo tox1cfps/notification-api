@@ -1,9 +1,9 @@
 package model
 
 type Notification struct {
-	ID            int
-	Title         string
-	Content       string
-	EmailAuthor   string
-	EmailReceiver string
+	ID            int    `json:"id"`
+	Title         string `json:"title"`
+	Content       string `json:"content"`
+	EmailAuthor   string `json:"emailauthor"`
+	EmailReceiver string `json:"emailreceiver"`
 }

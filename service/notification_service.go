@@ -2,6 +2,7 @@ package service
 
 import (
 	"notification-api/client"
+	"notification-api/model"
 	"notification-api/repository"
 )
 
@@ -16,6 +17,13 @@ func NewNotificationService(repo repository.NotificationRepository, g client.Gma
 		Gmailsmtp:              g,
 	}
 }
-func (n NotificationService) SendEmailToUser() {
+func (ns NotificationService) CreateNotification(notification model.Notification) (model.Notification, error) {
+	notificationID, err := ns.NotificationRepository.CreateNotification(notification)
+	if err != nil {
+		return model.Notification{}, err
+	}
 
+	notification.ID = notificationID
+
+	return notification, nil
 }
