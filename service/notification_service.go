@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"notification-api/client"
 	"notification-api/model"
 	"notification-api/repository"
@@ -24,6 +25,16 @@ func (ns NotificationService) CreateNotification(notification model.Notification
 	}
 
 	notification.ID = notificationID
+
+	err = ns.Gmailsmtp.SendEmail(
+		notification.EmailReceiver,
+		notification.Title,
+		notification.Content,
+	)
+
+	if err != nil {
+		log.Println("Failed to send email:", err)
+	}
 
 	return notification, nil
 }

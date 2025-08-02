@@ -31,13 +31,13 @@ func main() {
 		panic(err)
 	}
 
-	NotificationRepository := repository.NewNotificationRepository(dbconnection)
+	notificationRepository := repository.NewNotificationRepository(dbconnection)
 
-	Gmailsmtp := client.NewGmailsmtpClient()
+	gmailsmtp := client.NewGmailsmtpClient()
 
-	NotificationService := service.NewNotificationService(NotificationRepository, Gmailsmtp)
+	notificationService := service.NewNotificationService(notificationRepository, gmailsmtp)
 
-	NotificationController := controller.NewNotificationController(NotificationService)
+	notificationController := controller.NewNotificationController(notificationService)
 
 	r := gin.Default()
 	r.GET("/ping", func(ctx *gin.Context) {
@@ -45,6 +45,6 @@ func main() {
 			"message": "Pong",
 		})
 	})
-	r.POST("/sendEmail", NotificationController.Handle())
+	r.POST("/sendEmail", notificationController.Handle())
 	r.Run(":8080")
 }

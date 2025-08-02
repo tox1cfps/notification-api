@@ -24,7 +24,7 @@ func (nr *NotificationRepository) CreateNotification(notification model.Notifica
 		return 0, err
 	}
 
-	err = query.QueryRow(notification.Title, notification.Content, notification.Content, notification.EmailReceiver).Scan(&id)
+	err = query.QueryRow(notification.Title, notification.Content, notification.EmailAuthor, notification.EmailReceiver).Scan(&id)
 	if err != nil {
 		log.Println(err)
 		return 0, err
