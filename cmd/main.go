@@ -39,12 +39,19 @@ func main() {
 
 	notificationController := controller.NewNotificationController(notificationService)
 
+	userRepository := repository.NewUserRepository(dbconnection)
+
+	userService := service.NewUserService(userRepository)
+
+	userController := controller.NewUserController(userService)
+
 	r := gin.Default()
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"message": "Pong",
 		})
 	})
+	r.POST("/user", userController.CreateUser)
 	r.POST("/sendEmail", notificationController.Handle())
 	r.Run(":8080")
 }
