@@ -18,6 +18,23 @@ func NewUserRepository(connection *sql.DB) UserRepository {
 	}
 }
 
+func (ur *UserRepository) GetUserByEmail(email string) (model.User, error) {
+	var user model.User
+
+	query := "SELECT id_user, email, password_hash FROM users WHERE email = $1"
+	row := ur.connection.QueryRow(query, email)
+
+	err := row.Scan(&user.ID, &user.Email, &user.Password_Hash)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Println("User not found with this email:", email)
+			return user, nil
+		}
+		log.Println("Failed to get user by email:", err)
+	}
+	return user, nil
+}
+
 func (ur *UserRepository) CreateUser(user model.User) (int, error) {
 	var password string
 
@@ -41,4 +58,10 @@ func (ur *UserRepository) CreateUser(user model.User) (int, error) {
 	query.Close()
 
 	return id, nil
+}
+
+func (ur *UserRepository) UpdatePasswordByEmail(email, newPasswordHash string) error {
+	query := "UPDATE users SET password_hash = $1 WHERE email = $2"
+	_, err := ur.connection.Exec(query, newPasswordHash, email)
+	return err
 }

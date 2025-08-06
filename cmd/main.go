@@ -41,9 +41,15 @@ func main() {
 
 	userRepository := repository.NewUserRepository(dbconnection)
 
-	userService := service.NewUserService(userRepository)
+	userService := service.NewUserService(userRepository, notificationService)
 
 	userController := controller.NewUserController(userService)
+
+	resetPasswordRepository := repository.NewResetPasswordRepository(dbconnection)
+
+	resetService := service.NewResetPasswordService(resetPasswordRepository, userRepository, notificationService)
+
+	resetController := controller.NewResetPasswordController(resetService)
 
 	r := gin.Default()
 	r.GET("/ping", func(ctx *gin.Context) {
@@ -51,6 +57,8 @@ func main() {
 			"message": "Pong",
 		})
 	})
+	r.POST("/reset-password", resetController.RequestReset)
+	r.POST("/validate-token", resetController.ValidateReset)
 	r.POST("/user", userController.CreateUser)
 	r.POST("/sendEmail", notificationController.Handle())
 	r.Run(":8080")
