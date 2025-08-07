@@ -18,7 +18,7 @@ func NewNotificationRepository(connection *sql.DB) NotificationRepository {
 
 func (nr *NotificationRepository) CreateNotification(notification model.Notification) (int, error) {
 	var id int
-	query, err := nr.connection.Prepare("INSERT INTO notifications" + "(title, content, emailauthor, emailreceiver)" + "VALUES($1, $2, $3, $4) RETURNING id")
+	query, err := nr.connection.Prepare("INSERT INTO notifications" + "(title, content, email_author, email_receiver)" + "VALUES($1, $2, $3, $4) RETURNING id")
 	if err != nil {
 		log.Println(err)
 		return 0, err
