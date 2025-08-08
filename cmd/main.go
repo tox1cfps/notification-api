@@ -60,6 +60,7 @@ func main() {
 	r.POST("/reset-password", resetController.RequestReset)
 	r.POST("/validate-token", resetController.ValidateReset)
 	r.POST("/user", userController.CreateUser)
+	r.POST("/login", userController.LoginUser)
 	r.POST("/sendEmail", notificationController.Handle())
 	r.Run(":8080")
 }

@@ -35,3 +35,24 @@ func (u *UserController) CreateUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusAccepted, insertedUser)
 }
+
+func (u *UserController) LoginUser(c *gin.Context) {
+	var credentials struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := c.ShouldBindJSON(&credentials); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid data"})
+	}
+
+	token, err := u.UserService.LoginUser(credentials.Email, credentials.Password)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+	})
+}
