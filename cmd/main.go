@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"notification-api/client"
 	"notification-api/config"
 	"notification-api/controller"
@@ -52,6 +53,20 @@ func main() {
 	resetController := controller.NewResetPasswordController(resetService)
 
 	r := gin.Default()
+
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusOK)
+			return
+		}
+
+		c.Next()
+	})
+
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"message": "Pong",

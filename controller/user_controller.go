@@ -44,6 +44,7 @@ func (u *UserController) LoginUser(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&credentials); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid data"})
+		return
 	}
 
 	token, err := u.UserService.LoginUser(credentials.Email, credentials.Password)

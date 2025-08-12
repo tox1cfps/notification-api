@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resetar Senha</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Resetar Senha</h2>
+        <form id="step1" onsubmit="requestReset(event)">
+            <input type="email" id="reset-email" placeholder="Digite seu email" required>
+            <button type="submit">Enviar PIN</button>
+        </form>
+        <form id="step2" onsubmit="confirmReset(event)" style="display:none;">
+            <input type="email" id="reset-email-confirm" placeholder="Digite seu email" required>
+            <input type="text" id="reset-pin" placeholder="PIN recebido" required>
+            <input type="password" id="reset-new-password" placeholder="Nova senha" required>
+            <button type="submit">Alterar senha</button>
+        </form>
+
+        <a href="index.html">Voltar ao login</a>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>

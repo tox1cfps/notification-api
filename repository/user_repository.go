@@ -2,10 +2,9 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"notification-api/model"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository struct {
@@ -28,35 +27,33 @@ func (ur *UserRepository) GetUserByEmail(email string) (model.User, error) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("User not found with this email:", email)
-			return user, nil
+
+			return model.User{}, fmt.Errorf("user not found")
 		}
 		log.Println("Failed to get user by email:", err)
+		return model.User{}, err
 	}
+
 	return user, nil
 }
 
 func (ur *UserRepository) CreateUser(user model.User) (int, error) {
-	var password string
-
-	passwordhash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println("Failed to create password", err)
-		return 0, nil
-	}
-
 	var id int
-	query, err := ur.connection.Prepare("INSERT INTO users" + "(email, password_hash)" + "VALUES ($1, $2) RETURNING id_user")
+	query, err := ur.connection.Prepare(`
+        INSERT INTO users (email, password_hash)
+        VALUES ($1, $2) RETURNING id_user
+    `)
 	if err != nil {
 		log.Println("Failed to create new user:", err)
 		return 0, err
 	}
-	err = query.QueryRow(user.Email, string(passwordhash)).Scan(&id)
+	defer query.Close()
+
+	err = query.QueryRow(user.Email, user.Password_Hash).Scan(&id)
 	if err != nil {
 		log.Println("Failed to allocate new user:", err)
 		return 0, err
 	}
-	query.Close()
-
 	return id, nil
 }
 
